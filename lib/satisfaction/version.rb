@@ -1,4 +1,4 @@
-module Ruby-satisfaction #:nodoc:
+class Satisfaction #:nodoc:
   module VERSION #:nodoc:
     MAJOR = 0
     MINOR = 0

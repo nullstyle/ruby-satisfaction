@@ -1,8 +1,8 @@
-require 'ruby-satisfaction/version'
+require 'satisfaction/version'
 
-AUTHOR = 'FIXME full name'  # can also be an array of Authors
+AUTHOR = 'Scott Fleckenstein'  # can also be an array of Authors
 EMAIL = "nullstyle@gmail.com"
-DESCRIPTION = "description of gem"
+DESCRIPTION = "Access and modify data from getsatisfaction.com"
 GEM_NAME = 'ruby-satisfaction' # what ppl will type to install your gem
 RUBYFORGE_PROJECT = 'ruby-satisfaction' # The unix name for your project
 HOMEPATH = "http://#{RUBYFORGE_PROJECT}.rubyforge.org"
@@ -31,7 +31,7 @@ end
 REV = nil 
 # UNCOMMENT IF REQUIRED: 
 # REV = `svn info`.each {|line| if line =~ /^Revision:/ then k,v = line.split(': '); break v.chomp; else next; end} rescue nil
-VERS = Ruby-satisfaction::VERSION::STRING + (REV ? ".#{REV}" : "")
+VERS = Satisfaction::VERSION::STRING + (REV ? ".#{REV}" : "")
 RDOC_OPTS = ['--quiet', '--title', 'ruby-satisfaction documentation',
     "--opname", "index.html",
     "--line-numbers", 
@@ -59,8 +59,12 @@ hoe = Hoe.new(GEM_NAME, VERS) do |p|
   
   # == Optional
   p.changes = p.paragraphs_of("History.txt", 0..1).join("\\n\\n")
-  #p.extra_deps = []     # An array of rubygem dependencies [name, version], e.g. [ ['active_support', '>= 1.3.1'] ]
-  
+  p.extra_deps = [
+    ['rspec', ">= 1.0.8"],
+    ['active_support', ">= 1.4.2"],
+    ['hpricot', ">= 0.6.0"],
+    ['memcache-client', ">= 1.5.0"]
+  ]     
   #p.spec_extras = {}    # A hash of extra values to set in the gemspec.
   
 end

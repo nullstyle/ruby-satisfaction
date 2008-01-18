@@ -18,7 +18,6 @@ require 'satisfaction/topic'
 # require 'satisfaction/reply'
 
 class Satisfaction
-  VERSION = '0.0.1'
   include Associations
   
   attr_reader :options
