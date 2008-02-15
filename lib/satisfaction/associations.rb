@@ -7,4 +7,13 @@ module Associations
       end
     EOS
   end
+  
+  # def belongs_to(resource, options={})
+  #   class_name = options[:class_name] || resource.to_s.classify
+  #   eval <<-EOS
+  #     def #{resource}
+  #       @#{resource} ||= #{class_name}.new(#{resource}_id, self.satisfaction)
+  #     end
+  #   EOS
+  # end
 end

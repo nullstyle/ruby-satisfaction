@@ -31,14 +31,19 @@ class Loader
             raise ArgumentError, "Invalid uri, please use a String or URI object"
           end
     
-    path = url.path.blank? ? '/' : url.path
-    request = Net::HTTP::Get.new(path)
+    request = Net::HTTP::Get.new(url.request_uri)
     cache_record = cache.get(url)
     if cache_record && !options[:force]
       request["If-None-Match"] = cache_record.etag
     end
     
-    response = execute(url, request)
+    http = Net::HTTP.new(url.host, url.port)
+    
+    consumer = options[:consumer]
+    token = options[:token]
+    request.oauth!(http, consumer, token) if consumer    
+    
+    response = execute(http, request)
     
     case response
     when Net::HTTPNotModified
@@ -55,8 +60,8 @@ class Loader
   end
   
   private
-  def execute(url, request)
-    Net::HTTP.start(url.host, url.port) {|http| http.request(request) }
+  def execute(http, request)
+    http.start{|http| http.request(request) }
   end
 end
 

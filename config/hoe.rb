@@ -61,9 +61,10 @@ hoe = Hoe.new(GEM_NAME, VERS) do |p|
   p.changes = p.paragraphs_of("History.txt", 0..1).join("\\n\\n")
   p.extra_deps = [
     ['rspec', ">= 1.0.8"],
-    ['active_support', ">= 1.4.2"],
+    ['activesupport', ">= 1.4.2"],
     ['hpricot', ">= 0.6.0"],
-    ['memcache-client', ">= 1.5.0"]
+    ['memcache-client', ">= 1.5.0"],
+    ['oauth', ">= 0.2.0"],
   ]     
   #p.spec_extras = {}    # A hash of extra values to set in the gemspec.
   

@@ -1,6 +1,6 @@
 class Company < Resource
   
-  attributes :domain, :name, :logo
+  attributes :domain, :name, :logo, :description
   
   def path
     "/companies/#{@id}"

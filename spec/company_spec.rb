@@ -2,10 +2,7 @@ require 'spec_helper'
 
 describe "Company loader" do
   it "should work" do
-    p @satisfaction.companies.get("satisfaction").topics
-    t = @satisfaction.topics.get("256")
-    p t.last_active_at
-    p t.attributes
-    
+    @satisfaction.set_consumer('lmwjv4kzwi27', 'fiei6iv61jnoukaq1aylwd8vcmnkafrs')
+    p @satisfaction.request_token
   end
 end
