@@ -1,6 +1,6 @@
 require 'forwardable'
 
-class Resource < HasSatisfaction
+class Resource < Satisfaction::HasSatisfaction
   require 'satisfaction/resource/attributes'
   include ::Associations
   include Attributes
@@ -31,8 +31,9 @@ class Resource < HasSatisfaction
   end
 end
 
-class ResourceCollection < HasSatisfaction
+class ResourceCollection < Satisfaction::HasSatisfaction
   attr_reader :klass
+  attr_reader :path
   
   def initialize(klass, satisfaction, path)
     super satisfaction
@@ -41,15 +42,17 @@ class ResourceCollection < HasSatisfaction
   end
   
   def page(number, options={})
-    Page.new(@klass, number, @path, satisfaction, options)
+    Page.new(self, number, options)
   end
   
-  def get(id, options={})
-    klass.new(id, satisfaction)
+  def get(id)
+    satisfaction.identity_map.get_record(klass, id) do
+      klass.new(id, satisfaction)
+    end
   end
 end
 
-class Page < HasSatisfaction
+class Page < Satisfaction::HasSatisfaction
   attr_reader :total
   
   extend Forwardable
@@ -66,11 +69,11 @@ class Page < HasSatisfaction
   def_delegator :items, :to_a
   def_delegator :items, :empty?
   
-  def initialize(klass, number, path, satisfaction, options)
-    super(satisfaction)    
-    @klass = klass
-    @number = number
-    @path = path
+  def initialize(collection, page, options={})
+    super(collection.satisfaction)
+    @klass = collection.klass
+    @page = page
+    @path = collection.path
     @options = options
   end
   
@@ -85,16 +88,26 @@ class Page < HasSatisfaction
   end
   
   def next?
-    last_item = @number * length
+    last_item = @page * length
     @total > last_item
   end
   
+  def page_count
+    result = @total / length
+    result += 1 if @total % length != 0
+    result
+  end
+  
   def load
-    results = satisfaction.get("#{@path}.json", @options.merge(:page => @number))
+    results = satisfaction.get("#{@path}.json", @options.merge(:page => @page))
     json = JSON.parse(results)
     @total = json["total"]
+    
     json["data"].map do |result|
-      @klass.decode_sfn(result, satisfaction)
+      obj = @klass.decode_sfn(result, satisfaction)
+      satisfaction.identity_map.get_record(@klass, obj.id) do
+        obj
+      end
     end
   end
 end

@@ -1,4 +1,4 @@
-class HasSatisfaction
+class Satisfaction::HasSatisfaction
   attr_reader :satisfaction
   
   def initialize(satisfaction)

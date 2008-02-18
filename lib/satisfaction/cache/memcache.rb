@@ -1,5 +1,5 @@
 
-class Loader::MemcacheCache
+class Satisfaction::Loader::MemcacheCache
   def initialize(options = {})
     options = options.reverse_merge({:servers => ['127.0.0.1:11211'], :namespace => 'satisfaction', })
     @m = MemCache.new(options.delete(:servers), options)

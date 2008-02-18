@@ -2,7 +2,7 @@ require 'net/http'
 require 'uri'
 
 
-class Loader
+class Satisfaction::Loader
   require 'satisfaction/cache/hash'
   require 'satisfaction/cache/memcache'
 
@@ -13,8 +13,8 @@ class Loader
   def initialize(options={})
     @options = options.reverse_merge({:cache => :hash})
     @cache =  case @options[:cache]
-              when :hash then Loader::HashCache.new
-              when :memcache then Loader::MemcacheCache.new(@options[:memcache] || {})
+              when :hash then HashCache.new
+              when :memcache then MemcacheCache.new(@options[:memcache] || {})
               else
                 raise ArgumentError, "Invalid cache spec: #{@options[:cache]}"
               end

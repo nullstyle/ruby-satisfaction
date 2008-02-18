@@ -1,33 +1,36 @@
-require 'rubygems'
-require 'active_support'
-require 'hpricot'
-require 'json'
-gem('memcache-client')
-require 'memcache'
-
-require 'oauth'
-require 'oauth/signature/hmac/sha1'
-require 'oauth/client/net_http'
-
-require 'satisfaction/has_satisfaction'
-require 'satisfaction/loader'
-require 'satisfaction/associations'
-require 'satisfaction/resource'
-
-require 'satisfaction/company'
-require 'satisfaction/person'
-require 'satisfaction/topic'
-# require 'satisfaction/tag'
-# require 'satisfaction/product'
-require 'satisfaction/reply'
+require 'satisfaction/external_dependencies'
 
 class Satisfaction
+  # ==================
+  # = Core Utilities =
+  # ==================
+  require 'satisfaction/has_satisfaction'
+  require 'satisfaction/associations'
+  require 'satisfaction/resource'
+  require 'satisfaction/loader'
+  require 'satisfaction/identity_map'
+  
+  
+  # =============
+  # = Resources =
+  # =============
+  
+  require 'satisfaction/company'
+  require 'satisfaction/person'
+  require 'satisfaction/topic'
+  # require 'satisfaction/tag'
+  # require 'satisfaction/product'
+  require 'satisfaction/reply'
+  
+  # =============
+  
   include Associations
   
   attr_reader :options
   attr_reader :loader
   attr_reader :consumer
   attr_reader :token
+  attr_reader :identity_map
 
   
   def initialize(options={})
@@ -38,7 +41,8 @@ class Satisfaction
       :access_token_url => 'http://getsatisfaction.com/api/access_token',
       :authorize_url => 'http://getsatisfaction.com/api/authorize',
     })
-    @loader = Loader.new
+    @loader = Satisfaction::Loader.new
+    @identity_map = Satisfaction::IdentityMap.new
     
     has_many :companies, :url => '/companies'
     has_many :people, :url => '/people'
