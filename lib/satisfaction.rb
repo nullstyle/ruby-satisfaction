@@ -55,6 +55,12 @@ class Satisfaction
     self
   end
   
+  def me
+    @me ||= Me.new('me', self)
+    @me.load
+    @me
+  end
+  
   def autoload?
     options[:autoload]
   end
@@ -68,7 +74,17 @@ class Satisfaction
   end
   
   def request_token
-    @loader.get("#{options[:request_token_url]}", :force => true, :consumer => @consumer, :token => nil)
+    response = CGI.parse(@loader.get("#{options[:request_token_url]}", :force => true, :consumer => @consumer, :token => nil))
+    OAuth::Token.new(response["oauth_token"], response["oauth_token_secret"])
+  end
+  
+  def authorize_url(token)
+    "#{options[:authorize_url]}?oauth_token=#{token.token}"
+  end
+  
+  def access_token(token)
+    response = CGI.parse(@loader.get("#{options[:access_token_url]}", :force => true, :consumer => @consumer, :token => token))
+    OAuth::Token.new(response["oauth_token"], response["oauth_token_secret"])
   end
   
   
@@ -79,7 +95,7 @@ class Satisfaction
   
   def get(path, query_string={})
     url = self.url(path, query_string)
-    @loader.get(url)
+    @loader.get(url, :consumer => @consumer, :token => @token)
   end
   
   private

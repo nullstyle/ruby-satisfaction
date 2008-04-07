@@ -14,4 +14,5 @@ class Topic < Resource
     has_many :products, :url => "#{path}/products"
     has_many :tags, :url => "#{path}/tags"
   end
+
 end

@@ -11,3 +11,15 @@ class Person < Resource
     has_many :followed_topics, :url => "#{path}/followed/topics", :class_name => 'Topic'
   end
 end
+
+class Me < Person  
+  def path
+    "/me"
+  end
+  
+  def load
+    result = satisfaction.get("#{path}.json")    
+    self.attributes = JSON.parse(result)
+    self
+  end
+end
