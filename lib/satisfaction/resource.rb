@@ -50,6 +50,8 @@ class ResourceCollection < Satisfaction::HasSatisfaction
       klass.new(id, satisfaction)
     end
   end
+  
+  
 end
 
 class Page < Satisfaction::HasSatisfaction
@@ -71,25 +73,48 @@ class Page < Satisfaction::HasSatisfaction
   
   def initialize(collection, page, options={})
     super(collection.satisfaction)
+    @collection = collection
     @klass = collection.klass
     @page = page
     @path = collection.path
     @options = options
+    @options[:limit] ||= 10
   end
   
   # Retrieve the items for this page
   # * Caches
   def items
-    @data ||= load
+    load
+    @data
   end
   
   def loaded?
-    @data.nil?
+    !@data.nil?
+  end
+  
+  def page_size
+    @options[:limit]
   end
   
   def next?
-    last_item = @page * length
+    load #this loads the data, we shold probably make load set the ivar instead of items ;)
+    last_item = @page * page_size
     @total > last_item
+  end
+  
+  def next
+    return nil unless next?
+    self.class.new(@collection, @page + 1, @options)
+  end
+  
+  
+  def prev?
+    @page > 1
+  end
+  
+  def prev
+    return nil unless prev?
+    self.class.new(@collection, @page - 1, @options)
   end
   
   def page_count
@@ -98,12 +123,14 @@ class Page < Satisfaction::HasSatisfaction
     result
   end
   
-  def load
+  def load(force=false)
+    return @data if loaded? && !force
+    
     results = satisfaction.get("#{@path}.json", @options.merge(:page => @page))
     json = JSON.parse(results)
     @total = json["total"]
     
-    json["data"].map do |result|
+    @data = json["data"].map do |result|
       obj = @klass.decode_sfn(result, satisfaction)
       satisfaction.identity_map.get_record(@klass, obj.id) do
         obj
