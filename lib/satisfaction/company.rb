@@ -10,6 +10,8 @@ class Company < Resource
     has_many :people, :url => "#{path}/people"
     has_many :topics, :url => "#{path}/topics"
     has_many :products, :url => "#{path}/people"
+    has_many :employees, :url => "#{path}/employees", :class_name => 'Person'
+    
   end
   
 end
