@@ -45,12 +45,24 @@ class ResourceCollection < Satisfaction::HasSatisfaction
     Page.new(self, number, options)
   end
   
-  def get(id)
+  def get(id, options={})
+    #options currently ignored
     satisfaction.identity_map.get_record(klass, id) do
       klass.new(id, satisfaction)
     end
   end
   
+  def [](*key)
+    options = key.extract_options!
+    case key.length
+    when 1
+      get(key, options)
+    when 2
+      page(key.first, options.merge(:limit => key.last))
+    else
+      raise ArgumentError, "Invalid Array arguement, only use 2-element array: :first is the page number, :last is the page size"
+    end
+  end
   
 end
 
