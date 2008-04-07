@@ -56,6 +56,7 @@ end
 
 class Page < Satisfaction::HasSatisfaction
   attr_reader :total
+  attr_reader :collection
   
   extend Forwardable
   def_delegator :items, :first

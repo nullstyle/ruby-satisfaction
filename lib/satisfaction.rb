@@ -18,8 +18,8 @@ class Satisfaction
   require 'satisfaction/company'
   require 'satisfaction/person'
   require 'satisfaction/topic'
-  # require 'satisfaction/tag'
-  # require 'satisfaction/product'
+  require 'satisfaction/tag'
+  require 'satisfaction/product'
   require 'satisfaction/reply'
   
   # =============
@@ -48,7 +48,7 @@ class Satisfaction
     has_many :people, :url => '/people'
     has_many :topics, :url => '/topics'
     has_many :tags, :url => '/tags'
-    has_many :products, :url => '/people'
+    has_many :products, :url => '/products'
   end
   
   def satisfaction
