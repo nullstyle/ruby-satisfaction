@@ -1,5 +1,5 @@
 class Topic < Resource
-  attributes :subject, :style, :content, :reply_count, :follower_count
+  attributes :subject, :style, :content, :reply_count, :follower_count, :company_id
   attribute :last_active_at, :type => Time
   attribute :created_at, :type => Time
   attribute :author, :type => Person
@@ -13,6 +13,8 @@ class Topic < Resource
     has_many :people, :url => "#{path}/people"
     has_many :products, :url => "#{path}/products"
     has_many :tags, :url => "#{path}/tags"
+    
+    belongs_to :company
   end
 
 end

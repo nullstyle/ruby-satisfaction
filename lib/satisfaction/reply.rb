@@ -8,6 +8,6 @@ class Reply < Resource
   end
   
   def setup_associations
-
+    belongs_to :topic
   end
 end
