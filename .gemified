@@ -1,0 +1,12 @@
+--- 
+:author: Scott Fleckenstein
+:dependencies: 
+- rspec
+- oauth
+- memcache-client
+- "activesupport"
+:version: 0.1.0
+:name: ruby-satisfaction
+:summary: Helper gem for the getsatisfaction.com API
+:email: nullstyle@gmail.com
+:homepage: http://nullstyle.com

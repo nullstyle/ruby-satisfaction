@@ -21,39 +21,60 @@ class Satisfaction::Loader
   end
   
   def get(url, options = {})
-    options = options.reverse_merge({:limit => 3})
-    limit = options[:limit]
+    uri = get_uri(url)
+    request = Net::HTTP::Get.new(uri.request_uri)
+    cache_record = cache.get(uri)
     
-    url = case url
-          when URI then url
-          when String then URI.parse(url)
-          else
-            raise ArgumentError, "Invalid uri, please use a String or URI object"
-          end
-    
-    request = Net::HTTP::Get.new(url.request_uri)
-    cache_record = cache.get(url)
     if cache_record && !options[:force]
       request["If-None-Match"] = cache_record.etag
     end
     
-    http = Net::HTTP.new(url.host, url.port)
-    
-    consumer = options[:consumer]
-    token = options[:token]
-    request.oauth!(http, consumer, token) if consumer    
-    
+    http = Net::HTTP.new(uri.host, uri.port)
+    add_authentication(request, options)
     response = execute(http, request)
     
     case response
     when Net::HTTPNotModified
       return cache_record.body
     when Net::HTTPSuccess
-      cache.put(url, response)
+      cache.put(uri, response)
       response.body
     when Net::HTTPMovedPermanently
+      limit = options[:redirect_limit] || 3
       raise ArgumentError, "Too many redirects" unless limit > 0 #TODO: what is a better error here?
-      get(response['location'], options.merge(:limit => limit - 1))
+      get(response['location'], options.merge(:redirect_limit => limit - 1))
+    else
+      raise "Explode: #{response.to_yaml}"
+    end
+  end
+  
+  def post(url, options)
+    uri = get_uri(url)
+    form = options[:form] || {}
+    method_klass =  case options[:method]
+                    when :put     then Net::HTTP::Put
+                    when :delete  then Net::HTTP::Delete
+                    else
+                       Net::HTTP::Post
+                    end
+                    
+    request = method_klass.new(uri.request_uri)
+    
+    request.set_form_data(form)
+    
+    http = Net::HTTP.new(uri.host, uri.port)
+    add_authentication(request, options)
+    response = execute(http, request)
+    
+    case response
+    when Net::HTTPUnauthorized
+      [:unauthorized, response.body]
+    when Net::HTTPBadRequest
+      [:bad_request, response.body]
+    when Net::HTTPForbidden
+      [:forbidden, response.body]
+    when Net::HTTPSuccess
+      [:ok, response.body]
     else
       raise "Explode: #{response.to_yaml}"
     end
@@ -62,6 +83,23 @@ class Satisfaction::Loader
   private
   def execute(http, request)
     http.start{|http| http.request(request) }
+  end
+  
+  def get_uri(url)
+    case url
+    when URI then url
+    when String then URI.parse(url)
+    else
+      raise ArgumentError, "Invalid uri, please use a String or URI object"
+    end
+  end
+  
+  def add_authentication(request, options)
+    if options[:user]
+      request.basic_auth(options[:user], options[:password])
+    elsif options[:consumer]
+      request.oauth!(http, options[:consumer], options[:token])
+    end
   end
 end
 

@@ -4,6 +4,7 @@ class Satisfaction
   # ==================
   # = Core Utilities =
   # ==================
+  require 'satisfaction/util'
   require 'satisfaction/has_satisfaction'
   require 'satisfaction/associations'
   require 'satisfaction/resource'
@@ -65,6 +66,11 @@ class Satisfaction
     options[:autoload]
   end
   
+  def set_basic_auth(user, password)
+    @user = user
+    @password = password
+  end
+  
   def set_consumer(key, secret)
     @consumer = OAuth::Consumer.new(key, secret)
   end
@@ -95,9 +101,20 @@ class Satisfaction
   
   def get(path, query_string={})
     url = self.url(path, query_string)
-    @loader.get(url, :consumer => @consumer, :token => @token)
+    
+    @loader.get(url, :consumer => @consumer, :token => @token, :user => @user, :password => @password)
+      
   end
   
+  def post(path, form={})
+    url = self.url(path)
+    @loader.post(url, 
+      :consumer => @consumer, 
+      :token => @token, 
+      :user => @user, 
+      :password => @password,
+      :form => form)
+  end
   private
   def validate_options
     raise ArgumentError, "You must specify a location for the API's service root" if options[:root].blank?

@@ -34,6 +34,7 @@ end
 class ResourceCollection < Satisfaction::HasSatisfaction
   attr_reader :klass
   attr_reader :path
+  include Satisfaction::Util
   
   def initialize(klass, satisfaction, path)
     super satisfaction
@@ -49,6 +50,21 @@ class ResourceCollection < Satisfaction::HasSatisfaction
     #options currently ignored
     satisfaction.identity_map.get_record(klass, id) do
       klass.new(id, satisfaction)
+    end
+  end
+  
+  def post(attrs)
+    params = requestify(attrs, klass.name.underscore)
+    result = satisfaction.post("#{path}.json", params)
+    
+    if result.first == :ok
+      json = JSON.parse(result.last)
+      id = json["id"]
+      obj = klass.new(id, satisfaction)
+      obj.attributes = json
+      obj
+    else
+      result
     end
   end
   
