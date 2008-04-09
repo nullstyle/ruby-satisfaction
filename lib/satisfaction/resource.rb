@@ -5,6 +5,8 @@ class Resource < Satisfaction::HasSatisfaction
   include ::Associations
   include Attributes
   attr_reader :id
+  include Satisfaction::Util
+  
   
   def initialize(id, satisfaction)
     super satisfaction
@@ -22,6 +24,24 @@ class Resource < Satisfaction::HasSatisfaction
     self
   end
   
+  def delete
+    satisfaction.delete("#{path}.json")
+  end
+  
+  
+  def put(attrs)
+    params = requestify(attrs, self.class.name.underscore)
+    result = satisfaction.put("#{path}.json", params)
+    
+    if result.first == :ok
+      json = JSON.parse(result.last)
+      self.attributes = json
+      self
+    else
+      result
+    end
+  end
+  
   def loaded?
     !@attributes.nil?
   end
@@ -29,6 +49,7 @@ class Resource < Satisfaction::HasSatisfaction
   def inspect
     "<#{self.class.name} #{attributes.map{|k,v| "#{k}: #{v}"}.join(' ') if !attributes.nil?}>"
   end
+
 end
 
 class ResourceCollection < Satisfaction::HasSatisfaction

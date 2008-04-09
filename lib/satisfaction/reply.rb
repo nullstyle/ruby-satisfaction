@@ -4,7 +4,7 @@ class Reply < Resource
   attribute :author, :type => Person
   
   def path
-    "/#{topic_id}/replies/#{id}"
+    "/replies/#{id}"
   end
   
   def setup_associations

@@ -48,6 +48,7 @@ class Satisfaction
     has_many :companies, :url => '/companies'
     has_many :people, :url => '/people'
     has_many :topics, :url => '/topics'
+    has_many :replies, :url => '/replies'
     has_many :tags, :url => '/tags'
     has_many :products, :url => '/products'
   end
@@ -115,6 +116,28 @@ class Satisfaction
       :password => @password,
       :form => form)
   end
+  
+  def delete(path)
+    url = self.url(path)
+    @loader.post(url,
+      :consumer => @consumer, 
+      :token => @token, 
+      :user => @user, 
+      :password => @password,
+      :method => :delete)
+  end
+  
+  def put(path, form={})
+    url = self.url(path)
+    @loader.post(url, 
+      :consumer => @consumer, 
+      :token => @token, 
+      :user => @user, 
+      :password => @password,
+      :method => :put,
+      :form => form)
+  end
+  
   private
   def validate_options
     raise ArgumentError, "You must specify a location for the API's service root" if options[:root].blank?
