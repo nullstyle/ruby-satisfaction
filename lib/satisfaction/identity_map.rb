@@ -14,4 +14,8 @@ class Satisfaction::IdentityMap
     end
     result
   end
+  
+  def expire_record(klass, id)
+    @records[[klass, id]] = nil
+  end
 end

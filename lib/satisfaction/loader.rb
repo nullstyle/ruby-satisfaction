@@ -12,6 +12,10 @@ class Satisfaction::Loader
   
   def initialize(options={})
     @options = options.reverse_merge({:cache => :hash})
+    reset_cache
+  end
+  
+  def reset_cache
     @cache =  case @options[:cache]
               when :hash then HashCache.new
               when :memcache then MemcacheCache.new(@options[:memcache] || {})
@@ -35,14 +39,20 @@ class Satisfaction::Loader
     
     case response
     when Net::HTTPNotModified
-      return cache_record.body
+      return [:ok, cache_record.body]
     when Net::HTTPSuccess
       cache.put(uri, response)
-      response.body
+      [:ok, response.body]
     when Net::HTTPMovedPermanently
       limit = options[:redirect_limit] || 3
       raise ArgumentError, "Too many redirects" unless limit > 0 #TODO: what is a better error here?
       get(response['location'], options.merge(:redirect_limit => limit - 1))
+    when Net::HTTPBadRequest
+      [:bad_request, response.body]
+    when Net::HTTPForbidden
+      [:forbidden, response.body]
+    when Net::HTTPUnauthorized
+      [:unauthorized, response.body]
     else
       raise "Explode: #{response.to_yaml}"
     end

@@ -58,9 +58,15 @@ class Satisfaction
   end
   
   def me
-    @me ||= Me.new('me', self)
-    @me.load
-    @me
+    me = satisfaction.identity_map.get_record(Me, 'me') do
+      Me.new('me', satisfaction)
+    end
+    
+    if me.loaded?
+      me
+    else
+      me.load 
+    end
   end
   
   def autoload?
@@ -68,15 +74,18 @@ class Satisfaction
   end
   
   def set_basic_auth(user, password)
+    identity_map.expire_record(Me, 'me')
     @user = user
     @password = password
   end
   
   def set_consumer(key, secret)
+    identity_map.expire_record(Me, 'me')
     @consumer = OAuth::Consumer.new(key, secret)
   end
   
   def set_token(token, secret)
+    identity_map.expire_record(Me, 'me')
     @token = OAuth::Token.new(token, secret)
   end
   

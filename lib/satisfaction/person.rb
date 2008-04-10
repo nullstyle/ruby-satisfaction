@@ -17,11 +17,8 @@ class Me < Person
     loaded? ? super : "/me"
   end
   
-  def load
-    result = satisfaction.get("#{path}.json")
-    self.attributes = JSON.parse(result)
+  def was_loaded(result)
     @id = self.attributes["id"]
     setup_associations
-    self
   end
 end

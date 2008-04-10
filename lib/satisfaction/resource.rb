@@ -19,15 +19,24 @@ class Resource < Satisfaction::HasSatisfaction
   end
   
   def load
-    result = satisfaction.get("#{path}.json")    
-    self.attributes = JSON.parse(result)
-    self
+    result = satisfaction.get("#{path}.json")
+    
+    if result.first == :ok
+      self.attributes = JSON.parse(result.last)
+      was_loaded(result.last)
+      self
+    else
+      result
+    end
+  end
+  
+  def was_loaded(result)
+    #override this to augment post-loading behavior
   end
   
   def delete
     satisfaction.delete("#{path}.json")
   end
-  
   
   def put(attrs)
     params = requestify(attrs, self.class.name.underscore)
@@ -175,16 +184,21 @@ class Page < Satisfaction::HasSatisfaction
   
   def load(force=false)
     return @data if loaded? && !force
+        
+    result = satisfaction.get("#{@path}.json", @options.merge(:page => @page))
     
-    results = satisfaction.get("#{@path}.json", @options.merge(:page => @page))
-    json = JSON.parse(results)
-    @total = json["total"]
+    if result.first == :ok
+      json = JSON.parse(result.last)
+      @total = json["total"]
     
-    @data = json["data"].map do |result|
-      obj = @klass.decode_sfn(result, satisfaction)
-      satisfaction.identity_map.get_record(@klass, obj.id) do
-        obj
+      @data = json["data"].map do |result|
+        obj = @klass.decode_sfn(result, satisfaction)
+        satisfaction.identity_map.get_record(@klass, obj.id) do
+          obj
+        end
       end
+    else
+      result
     end
   end
 end
