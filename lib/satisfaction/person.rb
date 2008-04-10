@@ -14,12 +14,14 @@ end
 
 class Me < Person  
   def path
-    "/me"
+    loaded? ? super : "/me"
   end
   
   def load
-    result = satisfaction.get("#{path}.json")    
+    result = satisfaction.get("#{path}.json")
     self.attributes = JSON.parse(result)
+    @id = self.attributes["id"]
+    setup_associations
     self
   end
 end
