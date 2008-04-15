@@ -56,7 +56,11 @@ class Resource < Satisfaction::HasSatisfaction
   end
   
   def inspect
-    "<#{self.class.name} #{attributes.map{|k,v| "#{k}: #{v}"}.join(' ') if !attributes.nil?}>"
+    if loaded?
+      "<#{self.class.name} #{attributes.map{|k,v| "#{k}: #{v}"}.join(' ') if !attributes.nil?}>"
+    else
+      "<#{self.class.name} #{path} UNLOADED>"      
+    end
   end
 
 end
