@@ -1,7 +1,7 @@
-class Reply < Resource
+class Satisfaction::Reply < Satisfaction::Resource
   attributes :content, :star_count, :topic_id
   attribute :created_at, :type => Time
-  attribute :author, :type => Person
+  attribute :author, :type => Satisfaction::Person
   
   def path
     "/replies/#{id}"

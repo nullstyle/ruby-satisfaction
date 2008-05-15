@@ -1,4 +1,4 @@
-class Tag < Resource
+class Satisfaction::Tag < Satisfaction::Resource
   attributes :name
 
   def path

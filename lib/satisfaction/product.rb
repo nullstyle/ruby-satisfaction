@@ -1,4 +1,4 @@
-class Product < Resource
+class Satisfaction::Product < Satisfaction::Resource
   attributes :name, :url, :image, :description
   attribute :last_active_at, :type => Time
   attribute :created_at, :type => Time
