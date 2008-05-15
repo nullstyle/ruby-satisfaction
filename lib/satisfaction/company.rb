@@ -1,4 +1,4 @@
-class Satisfaction::Company < Satisfaction::Resource
+class Sfn::Company < Sfn::Resource
   
   attributes :domain, :name, :logo, :description
   
@@ -10,7 +10,7 @@ class Satisfaction::Company < Satisfaction::Resource
     has_many :people, :url => "#{path}/people"
     has_many :topics, :url => "#{path}/topics"
     has_many :products, :url => "#{path}/products"
-    has_many :employees, :url => "#{path}/employees", :class_name => 'Satisfaction::Person'
+    has_many :employees, :url => "#{path}/employees", :class_name => 'Sfn::Person'
     has_many :tags, :url => "#{path}/tags"
     
   end

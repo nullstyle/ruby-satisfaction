@@ -1,4 +1,4 @@
-class Satisfaction::Tag < Satisfaction::Resource
+class Sfn::Tag < Sfn::Resource
   attributes :name
 
   def path

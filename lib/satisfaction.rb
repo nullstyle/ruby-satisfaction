@@ -1,5 +1,6 @@
 require 'satisfaction/external_dependencies'
-
+module Sfn
+end
 class Satisfaction
   # ==================
   # = Core Utilities =
@@ -42,8 +43,8 @@ class Satisfaction
       :access_token_url => 'http://getsatisfaction.com/api/access_token',
       :authorize_url => 'http://getsatisfaction.com/api/authorize',
     })
-    @loader = Satisfaction::Loader.new
-    @identity_map = Satisfaction::IdentityMap.new
+    @loader = Sfn::Loader.new
+    @identity_map = Sfn::IdentityMap.new
     
     has_many :companies, :url => '/companies'
     has_many :people, :url => '/people'
@@ -59,7 +60,7 @@ class Satisfaction
   
   def me
     me = satisfaction.identity_map.get_record(Me, 'me') do
-      Me.new('me', satisfaction)
+      Sfn::Me.new('me', satisfaction)
     end
     
     if me.loaded?

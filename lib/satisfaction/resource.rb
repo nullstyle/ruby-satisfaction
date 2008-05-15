@@ -1,11 +1,11 @@
 require 'forwardable'
 
-class Satisfaction::Resource < Satisfaction::HasSatisfaction
+class Sfn::Resource < Sfn::HasSatisfaction
   require 'satisfaction/resource/attributes'
   include ::Associations
   include Attributes
   attr_reader :id
-  include Satisfaction::Util
+  include Sfn::Util
   
   
   def initialize(id, satisfaction)
@@ -61,10 +61,10 @@ class Satisfaction::Resource < Satisfaction::HasSatisfaction
 
 end
 
-class ResourceCollection < Satisfaction::HasSatisfaction
+class Sfn::ResourceCollection < Sfn::HasSatisfaction
   attr_reader :klass
   attr_reader :path
-  include Satisfaction::Util
+  include Sfn::Util
   
   def initialize(klass, satisfaction, path)
     super satisfaction
@@ -73,7 +73,7 @@ class ResourceCollection < Satisfaction::HasSatisfaction
   end
   
   def page(number, options={})
-    Page.new(self, number, options)
+    Sfn::Page.new(self, number, options)
   end
   
   def get(id, options={})
@@ -112,7 +112,7 @@ class ResourceCollection < Satisfaction::HasSatisfaction
   
 end
 
-class Page < Satisfaction::HasSatisfaction
+class Sfn::Page < Sfn::HasSatisfaction
   attr_reader :total
   attr_reader :collection
   

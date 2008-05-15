@@ -1,4 +1,4 @@
-class Satisfaction::IdentityMap
+class Sfn::IdentityMap
   attr_reader :records, :pages
   
   def initialize

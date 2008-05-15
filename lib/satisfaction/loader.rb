@@ -2,7 +2,7 @@ require 'net/http'
 require 'uri'
 
 
-class Satisfaction::Loader
+class Sfn::Loader
   require 'satisfaction/cache/hash'
   require 'satisfaction/cache/memcache'
 
