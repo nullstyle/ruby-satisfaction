@@ -1,6 +1,6 @@
 require 'forwardable'
 
-class Resource < Satisfaction::HasSatisfaction
+class Satisfaction::Resource < Satisfaction::HasSatisfaction
   require 'satisfaction/resource/attributes'
   include ::Associations
   include Attributes
