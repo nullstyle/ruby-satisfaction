@@ -1,4 +1,4 @@
-class Person < Resource
+class Sfn::Person < Sfn::Resource
   attributes :name, :id, :photo, :tagline
   
   def path
@@ -8,11 +8,11 @@ class Person < Resource
   def setup_associations
     has_many :replies, :url => "#{path}/replies"
     has_many :topics, :url => "#{path}/topics"
-    has_many :followed_topics, :url => "#{path}/followed/topics", :class_name => 'Topic'
+    has_many :followed_topics, :url => "#{path}/followed/topics", :class_name => 'Sfn::Topic'
   end
 end
 
-class Me < Person  
+class Me < Sfn::Person  
   def path
     loaded? ? super : "/me"
   end

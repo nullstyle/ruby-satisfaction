@@ -1,4 +1,4 @@
-class Satisfaction::HasSatisfaction
+class Sfn::HasSatisfaction
   attr_reader :satisfaction
   
   def initialize(satisfaction)

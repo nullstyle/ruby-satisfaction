@@ -1,4 +1,4 @@
-class Tag < Resource
+class Sfn::Tag < Sfn::Resource
   attributes :name
 
   def path

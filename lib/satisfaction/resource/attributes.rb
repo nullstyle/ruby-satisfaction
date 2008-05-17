@@ -1,4 +1,4 @@
-module Resource::Attributes
+module Sfn::Resource::Attributes
   def self.included(base)
     base.class_eval do
       extend ClassMethods
@@ -54,7 +54,7 @@ class Time
   end
 end
 
-class Resource
+class Sfn::Resource
   def self.decode_sfn(value, satisfaction)
     case value
     when Hash
