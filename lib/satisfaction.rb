@@ -91,7 +91,9 @@ class Satisfaction
   end
   
   def request_token
-    response = CGI.parse(@loader.get("#{options[:request_token_url]}", :force => true, :consumer => @consumer, :token => nil))
+    result, body = *@loader.get("#{options[:request_token_url]}", :force => true, :consumer => @consumer, :token => nil)
+    raise "Could not retrieve request token" unless result == :ok
+    response = CGI.parse(body)
     OAuth::Token.new(response["oauth_token"], response["oauth_token_secret"])
   end
   
@@ -100,7 +102,9 @@ class Satisfaction
   end
   
   def access_token(token)
-    response = CGI.parse(@loader.get("#{options[:access_token_url]}", :force => true, :consumer => @consumer, :token => token))
+    result, body = *@loader.get("#{options[:access_token_url]}", :force => true, :consumer => @consumer, :token => token)
+    raise "Could not retrieve access token" unless result == :ok
+    response = CGI.parse(body)
     OAuth::Token.new(response["oauth_token"], response["oauth_token_secret"])
   end
   

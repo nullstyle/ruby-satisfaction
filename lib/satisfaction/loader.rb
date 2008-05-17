@@ -34,7 +34,7 @@ class Sfn::Loader
     end
     
     http = Net::HTTP.new(uri.host, uri.port)
-    add_authentication(request, options)
+    add_authentication(request, http, options)
     response = execute(http, request)
     
     case response
@@ -73,7 +73,7 @@ class Sfn::Loader
     request.set_form_data(form)
     
     http = Net::HTTP.new(uri.host, uri.port)
-    add_authentication(request, options)
+    add_authentication(request, http, options)
     response = execute(http, request)
     
     case response
@@ -104,7 +104,7 @@ class Sfn::Loader
     end
   end
   
-  def add_authentication(request, options)
+  def add_authentication(request, http, options)
     if options[:user]
       request.basic_auth(options[:user], options[:password])
     elsif options[:consumer]
