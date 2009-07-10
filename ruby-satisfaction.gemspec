@@ -17,6 +17,8 @@ Gem::Specification.new do |s|
      "CONTRIBUTORS.txt",
      "License.txt",
      "README.txt",
+     "Rakefile",
+     "VERSION.yml",
      "init.rb",
      "lib/satisfaction.rb",
      "lib/satisfaction/associations.rb",
@@ -35,6 +37,7 @@ Gem::Specification.new do |s|
      "lib/satisfaction/tag.rb",
      "lib/satisfaction/topic.rb",
      "lib/satisfaction/util.rb",
+     "ruby-satisfaction.gemspec",
      "spec/company_spec.rb",
      "spec/identity_map_spec.rb",
      "spec/spec_helper.rb"
@@ -42,6 +45,7 @@ Gem::Specification.new do |s|
   s.homepage = %q{http://github.com/nullstyle/ruby-satisfaction}
   s.rdoc_options = ["--charset=UTF-8"]
   s.require_paths = ["lib"]
+  s.rubyforge_project = %q{satisfaction}
   s.rubygems_version = %q{1.3.4}
   s.summary = %q{Ruby interface to Get Satisfaction}
   s.test_files = [
