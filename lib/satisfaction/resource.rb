@@ -39,7 +39,7 @@ class Sfn::Resource < Sfn::HasSatisfaction
   end
   
   def put(attrs)
-    params = requestify(attrs, self.class.name.underscore)
+    params = requestify(attrs, self.class.name.demodulize.underscore)
     result = satisfaction.put("#{path}.json", params)
     
     if result.first == :ok
@@ -88,7 +88,7 @@ class Sfn::ResourceCollection < Sfn::HasSatisfaction
   end
   
   def post(attrs)
-    params = requestify(attrs, klass.name.underscore)
+    params = requestify(attrs, klass.name.demodulize.underscore)
     result = satisfaction.post("#{path}.json", params)
     
     if result.first == :ok
