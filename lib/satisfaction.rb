@@ -111,7 +111,9 @@ class Satisfaction
   
   def url(path, query_string={})
     qs = query_string.map{|kv| URI.escape(kv.first.to_s) + "=" + URI.escape(kv.last.to_s)}.join("&")
-    URI.parse("#{@options[:root]}#{path}?#{qs}")
+    uri_string = "#{@options[:root]}#{path}"
+    uri_string += "?#{qs}" unless qs.blank?
+    URI.parse(uri_string)
   end
   
   def get(path, query_string={})
